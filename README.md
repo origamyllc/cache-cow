@@ -3,6 +3,9 @@
 #Cache-cow
 an orm for key value stoes
 
+[logo]: http://msqq.com/d/file/icon/2014-08-16/1db278d780633605fb707e0ae77d93de.png "Cache-cow"
+
+
 Cache cow simplifies managing key value stores abstracting away caching from the application logic
 currently supported key value stores are
 
