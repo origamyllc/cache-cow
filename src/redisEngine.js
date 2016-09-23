@@ -25,21 +25,21 @@ else{
     throw new Error('no redis config found please set the path for the config file')
 }
 
+//todo: find a way to check connection error
 let client = redis.createClient(options);
-let instance = null;
 
 class redisEngine extends abstactCacheEngine {
 
     get(key) {
         return new Promise((resolve) => {
-            client.get(key, function (err, reply) {
+            client.get(key, (err, reply) => {
                 resolve(reply);
             });
         });
     }
 
     set(key, value, ttl) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             if (typeof key === 'undefined') {
                 reject(new Error('Invalid key undefined'));
             }
@@ -47,11 +47,11 @@ class redisEngine extends abstactCacheEngine {
             var encoded = JSON.stringify(value);
 
             if (ttl) {
-                client.setex(key, ttl, encoded, function (err) {
+                client.setex(key, ttl, encoded,  (err) =>  {
                     err ? reject(err) : resolve(value);
                 });
             } else {
-                client.set(key, encoded, function (err) {
+                client.set(key, encoded, (err) => {
                     err ? reject(err) : resolve(value);
                 });
             }
@@ -61,8 +61,8 @@ class redisEngine extends abstactCacheEngine {
     setMulti(values, ttl) {
         let client = this.client;
 
-        return new Promise(function (resolve, reject) {
-            if (!_.isObject(values)) {
+        return new Promise((resolve, reject) => {
+            if (values) {
                 let err = new Error('values must be a hash');
                 return reject(err);
             }
@@ -81,7 +81,7 @@ class redisEngine extends abstactCacheEngine {
                 }
             }
             if (commands.length) {
-                client.multi(commands).exec(function (err) {
+                client.multi(commands).exec((err) => {
                     return err ? reject(err) : resolve(values);
                 });
             }
@@ -92,12 +92,12 @@ class redisEngine extends abstactCacheEngine {
     getMulti(keys) {
         let client = this.client;
 
-        if (!_.isArray(keys)) {
+        if (keys) {
             let err = new Error('Keys must be an array');
             return Promise.reject(err);
         }
 
-        return this.client.mgetAsync(keys).then(function (replies) {
+        return this.client.mgetAsync(keys).then((replies) => {
             let results = {};
             for (let i = 0; i < replies.length; i++) {
                 let key = keys[i],
