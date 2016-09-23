@@ -12,7 +12,7 @@ currently supported key value stores are
 cachecow allows for asynchronous call to cache using promises .built over known and proven libraries
 it is a battle hardened library being used at monkeypatched.
 
-you need to set the process.env.CONFIG_PATH variable to give the location from which the configurations will be read
+you need to set the `` process.env.CONFIG_PATH ``  variable to give the location from which the configurations will be read
 otherwise cache cow will use the defaults
 
 defaults for local(lru cache) are
