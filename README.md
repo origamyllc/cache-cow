@@ -6,8 +6,8 @@ an orm for key value stoes
 Cache cow simplifies managing key value stores abstracting away caching from the application logic
 currently supported key value stores are
 
-* local (lru cache)
-* redis
+* **Local(lru-cache)**
+* **Redis**
 
 cachecow allows for asynchronous call to cache using promises .built over known and proven libraries
 it is a battle hardened library being used at monkeypatched.
