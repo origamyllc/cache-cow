@@ -5,9 +5,15 @@
   "main": "./bin/index.js",
   "scripts": {
     "build": "babel src -d bin",
-    "start:cache-cow": "node index.js --harmony"
+    "start:cache-cow": "node index.js",
+    "test:unit": "mocha --compilers js:babel-core/register --recursive ./tests/*.js"
   },
-  "keywords": ["redis","cache","lru","cut"],
+  "keywords": [
+    "redis",
+    "cache",
+    "lru",
+    "cut"
+  ],
   "author": "monkeypatched-prashun",
   "license": "MIT",
   "devDependencies": {
@@ -17,7 +23,9 @@
     "babel-preset-stage-2": "^6.5.0",
     "babel-register": "^6.8.0",
     "bluebird": "^3.4.6",
+    "chai": "^3.5.0",
     "lru-cache": "^4.0.1",
+    "mocha": "^3.0.2",
     "redis": "^2.6.2"
   },
   "dependencies": {}

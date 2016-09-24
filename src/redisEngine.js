@@ -3,6 +3,8 @@
 const Promise = require('bluebird');
 const  abstactCacheEngine = require('./abstractCacheEngine.js');
 const redis = require("redis");
+Promise.promisifyAll(redis.RedisClient.prototype);
+Promise.promisifyAll(redis.Multi.prototype);
 
 let options = {};
 let defaults = {
@@ -59,10 +61,9 @@ class redisEngine extends abstactCacheEngine {
     }
 
     setMulti(values, ttl) {
-        let client = this.client;
 
         return new Promise((resolve, reject) => {
-            if (values) {
+            if (!values) {
                 let err = new Error('values must be a hash');
                 return reject(err);
             }
@@ -80,43 +81,47 @@ class redisEngine extends abstactCacheEngine {
                     commands.push(['set', key, encoded]);
                 }
             }
+
+            // runs immediately
+            client.mset(values);
+
             if (commands.length) {
                 client.multi(commands).exec((err) => {
                     return err ? reject(err) : resolve(values);
                 });
             }
-            return resolve(values);
+            return resolve(true);
         });
     }
 
     getMulti(keys) {
-        let client = this.client;
 
-        if (keys) {
+        if (!keys) {
             let err = new Error('Keys must be an array');
             return Promise.reject(err);
         }
 
-        return this.client.mgetAsync(keys).then((replies) => {
-            let results = {};
-            for (let i = 0; i < replies.length; i++) {
-                let key = keys[i],
-                    value,
-                    encoded = replies[i];
+            return client.mgetAsync(keys).then((replies) => {
+                let results = {};
+                for (let i = 0; i < replies.length; i++) {
+                    let key = keys[i],
+                        value,
+                        encoded = replies[i];
 
-                if (typeof encoded === 'undefined') {
-                    value = undefined;
-                } else {
-                    try {
-                        value = JSON.parse(encoded);
-                    } catch (err) {
+                    if (typeof encoded === 'undefined') {
                         value = undefined;
+                    } else {
+                        try {
+                            value = JSON.parse(encoded);
+                        } catch (err) {
+                            value = undefined;
+                        }
                     }
+                    results[key] = value;
                 }
-                results[key] = value;
-            }
-            return results;
-        });
+                return results;
+            });
+
     }
 
     delete(key) {

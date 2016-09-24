@@ -40,13 +40,11 @@ class memoryEngine extends abstactCacheEngine {
         });
     }
 
-    set(key, value, ttl) {
+    set(key, value) {
         return new Promise( (resolve, reject) => {
             if (typeof key === 'undefined') {
                 reject(new Error('Invalid key undefined'));
             }
-
-            console.log(value);
 
             let encoded = JSON.stringify(value);
               cache.set(key, encoded )
@@ -54,51 +52,32 @@ class memoryEngine extends abstactCacheEngine {
         });
     }
 
-    setMulti(values, ttl) {
+    setMulti(values) {
         let client = this.client;
 
         return new Promise((resolve) => {
 
-            let keys = Object.keys(values),
-                commands = [];
+            for (var i = 0; i < values.length; i++) {
+                let obj = values[i],
+                    key = Object.keys(obj),
 
-            for (var i = 0; i < keys.length; i++) {
-                let key = keys[i],
-                    value = values[key],
-                    encoded = JSON.stringify(value);
-                    cache.set(key,  encoded);
+                    encoded = JSON.stringify(obj[key[0]]);
+                    cache.set(key[0], encoded);
             }
+
             return resolve(values);
         });
     }
 
     getMulti(keys) {
-        let client = this.client;
-
-        if (!_.isArray(keys)) {
-            let err = new Error('Keys must be an array');
-            return Promise.reject(err);
-        }
-
-        return this.client.mgetAsync(keys).then(function (replies) {
-            let results = {};
-            for (let i = 0; i < replies.length; i++) {
-                let key = keys[i],
-                    value,
-                    encoded = replies[i];
-
-                if (typeof encoded === 'undefined') {
-                    value = undefined;
-                } else {
-                    try {
-                        value = JSON.parse(encoded);
-                    } catch (err) {
-                        value = undefined;
-                    }
-                }
-                results[key] = value;
+        let results =[];
+        return new Promise((resolve) => {
+            for (var i = 0; i < keys.length; i++) {
+                let key = keys[i];
+                let val = cache.get(key)
+                results.push(val)
             }
-            return results;
+            return resolve(results);
         });
     }
 
