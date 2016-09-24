@@ -1,18 +1,20 @@
 
 
 #Cache-cow
+![alt text][logo]
+[logo]: http://www.imagemagick.org/Usage/color_basics/cow.gif "Cache-cow"
 an orm for key value stoes
 
 Cache cow simplifies managing key value stores abstracting away caching from the application logic
 currently supported key value stores are
 
-* local (lru cache)
-* redis
+* **Local(lru-cache)**
+* **Redis**
 
 cachecow allows for asynchronous call to cache using promises .built over known and proven libraries
 it is a battle hardened library being used at monkeypatched.
 
-you need to set the process.env.CONFIG_PATH variable to give the location from which the configurations will be read
+you need to set the `` process.env.CONFIG_PATH ``  variable to give the location from which the configurations will be read
 otherwise cache cow will use the defaults
 
 defaults for local(lru cache) are
