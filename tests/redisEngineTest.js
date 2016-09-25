@@ -19,14 +19,14 @@ describe('redis', function() {
         done()
     });
 
-    it('should get value in lru cache', function(done) {
+    it('should get value in redis', function(done) {
         engine.get('key').then((value) => {
             expect(value).to.equals('"{\\"val\\":\\"value\\"}"');
         });
         done()
     });
 
-    it('should not have value in lru cache if not set ', function(done) {
+    it('should not have value in redis if not set ', function(done) {
         engine.get('key3').then((value) => {
             expect(value).not.to.equals(JSON.stringify({val:'value'}));
             expect(value).to.equals(null);
@@ -34,28 +34,28 @@ describe('redis', function() {
         done()
     });
 
-    it('should set multiple values in lru cache  ', function(done) {
+    it('should set multiple values in redis  ', function(done) {
         engine.setMulti(["key", "test keys 1", "test val 1", "test keys 2", "test val 2"]).then((value) => {
             expect(value).to.equals(true);
         });
         done()
     });
 
-    it('should get multiple values  ', function(done) {
+    it('should get multiple values from redis ', function(done) {
        engine.getMulti(["key"]).then((val)=>{
            expect(val["key"]).to.equals(JSON.stringify({val:'value'}));
        })
         done()
     });
 
-    it('should be able to delete a key  from  lru cache', function(done) {
+    it('should be able to delete a key  from  redis', function(done) {
         engine.delete('key').then((value) => {
             expect(value).to.equals('key');
         });
         done()
     });
 
-    it('should be able to reset  lru cache', function(done) {
+    it('should be able to reset redis', function(done) {
         engine.clear().then((value) => {
             expect(value).to.equals(true);
         });
