@@ -3,7 +3,7 @@
 #Cache-cow
 ![alt text][logo]
 [logo]: http://www.imagemagick.org/Usage/color_basics/cow.gif "Cache-cow"
-an orm for key value stoes
+an orm for key value stores
 
 Cache cow simplifies managing key value stores abstracting away caching from the application logic
 currently supported key value stores are
