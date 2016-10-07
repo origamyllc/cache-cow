@@ -74,33 +74,11 @@ class redisEngine extends abstactCacheEngine {
     }
 
     getMulti(keys) {
-
-        if (!keys) {
-            let err = new Error('Keys must be an array');
-            return Promise.reject(err);
-        }
-
-            return client.mgetAsync(keys).then((replies) => {
-                let results = {};
-                for (let i = 0; i < replies.length; i++) {
-                    let key = keys[i],
-                        value,
-                        encoded = replies[i];
-
-                    if (typeof encoded === 'undefined') {
-                        value = undefined;
-                    } else {
-                        try {
-                            value = JSON.parse(encoded);
-                        } catch (err) {
-                            value = undefined;
-                        }
-                    }
-                    results[key] = value;
-                }
-                return results;
-            });
-
+       return new Promise(function (resolve) {
+           client.hget(keys, function (err, obj) {
+               resolve(obj);
+           });
+        });
     }
 
     delete(key) {
