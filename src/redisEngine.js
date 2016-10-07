@@ -61,35 +61,10 @@ class redisEngine extends abstactCacheEngine {
     }
 
     setMulti(values, ttl) {
-
         return new Promise((resolve, reject) => {
-            if (!values) {
-                let err = new Error('values must be a hash');
-                return reject(err);
-            }
-            let keys = Object.keys(values),
-                commands = [];
-
-            for (var i = 0; i < keys.length; i++) {
-                let key = keys[i],
-                    value = values[key],
-                    encoded = JSON.stringify(value);
-
-                if (ttl) {
-                    commands.push(['setex', key, ttl, encoded]);
-                } else {
-                    commands.push(['set', key, encoded]);
-                }
-            }
-
-            // runs immediately
-            client.mset(values);
-
-            if (commands.length) {
-                client.multi(commands).exec((err) => {
-                    return err ? reject(err) : resolve(values);
+           client.hmset(key,values, function (err, res) {
+                    console.log(err, res)
                 });
-            }
             return resolve(true);
         });
     }
