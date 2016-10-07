@@ -76,7 +76,11 @@ class redisEngine extends abstactCacheEngine {
     getMulti(keys) {
        return new Promise(function (resolve) {
            client.hget(keys, function (err, obj) {
-               resolve(obj);
+              if(!err) {
+                  resolve(obj);
+              } else {
+                  resolve(err);
+              }
            });
         });
     }
