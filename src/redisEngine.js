@@ -63,7 +63,11 @@ class redisEngine extends abstactCacheEngine {
     setMulti(values, ttl) {
         return new Promise((resolve, reject) => {
            client.hmset(key,values, function (err, res) {
-                    console.log(err, res)
+                    if(!err) {
+                        resolve(res);
+                    } else {
+                        resolve(err);
+                    }
                 });
             return resolve(true);
         });
